@@ -1707,7 +1707,7 @@ module Formtastic #:nodoc:
       result
     end
     
-    [:form_for, :fields_for, :remote_form_for].each do |meth|
+    [:form_for, :fields_for, :remote_form_for, :nested_form_for].each do |meth|
       module_eval <<-END_SRC, __FILE__, __LINE__ + 1
         def semantic_#{meth}(record_or_name_or_array, *args, &proc)
           options = args.extract_options!

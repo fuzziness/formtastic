@@ -122,5 +122,13 @@ describe 'SemanticFormHelper' do
     end
   end
 
+  describe '#semantic_nested_form_for' do
+    it 'yields an instance of SemanticFormBuilder' do
+      self.should_receive(:nested_form_for)
+      semantic_nested_form_for(:post, ::Post.new, :url => '/hello') do |builder|
+        builder.class.should == ::Formtastic::SemanticFormBuilder
+      end
+    end
+  end
 end
 

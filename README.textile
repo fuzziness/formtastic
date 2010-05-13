@@ -195,6 +195,20 @@ Or the Formtastic way with the @:for@ option:
   <% end %>
 </pre>
 
+Convenient manage of multiple nested models in an unobtrusive way (through jQuery) is also supported using Ryan Bates "nested_form":http://github.com/ryanb/nested_form plugin (be sure to setup correctly the right builder – see the Plugin docs)
+
+<pre>
+  <% semantic_nested_form_for @post do |form| %>
+    <%= form.inputs :title, :body, :created_at %>
+    <% form.semantic_fields_for :author do |author| %>
+      <%= author.inputs :first_name, :last_name, :name => "Author" %>
+      <%= author.link_to_remove "Remove author" %>
+    <% end %>
+    <%= form.link_to_add "Add an author", :authors %>
+    <%= form.buttons %>
+  <% end %>
+</pre>
+
 When working in has many association, you can even supply @"%i"@ in your fieldset name that it will be properly interpolated with the child index. For example:
 
 <pre>
