@@ -1,9 +1,23 @@
-0.9.9 [unreleased]
+1.0.0.beta
+
+* Fixed :radio and :check_boxes inputs so that the legend no longer includes a <label> with a `for` attribute pointing to an input that doesn't exist (#253)
+* Fixed that some inputs had invalid 'find_options' attribute (#262)
+* Fixed that we were calling html_safe! when it was not always available
+* Added the ability for :input_html to now accept an option of :size => nil, to exclude the :size attribute altogether (#267)
+
+0.9.10
+
+* Fixed i18n incompatibility with Rails 2.3.8 by reverting two i18n patches pulled in from the rails3 branch
+
+0.9.9
 
 * Changed date/time inputs to default to nil instead of Time.now when the object has no value (due to deprecation warning, #240)
 * Changed the behaviour of associations with a :class_name option to be more consistent with what Rails expects
+* Fixed issues relating to Rails 2.3.6 automatically escaping ERB
 * Fixed issues with Ruby 1.9.1 and Haml
-* Add the :disabled option to check_boxes input
+* Fixed use of deprecated {{key}} syntax in i18n interpolation (thanks to Hans Petter Wilhelmsen)
+* Added the :disabled option to check_boxes input
+* Added translation support for nested models (thanks to Toni Tuominen)
 
 0.9.8
 

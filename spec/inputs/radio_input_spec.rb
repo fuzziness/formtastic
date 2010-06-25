@@ -29,7 +29,7 @@ describe 'radio input' do
     end
     
     it 'should not link the label within the legend to any input' do
-      output_buffer.should_not have_tag('form li fieldset legend label[@for^="post_author_id_"]')
+      output_buffer.should_not have_tag('form li fieldset legend label[@for]')
     end
 
     it 'should generate an ordered list with a list item for each choice' do
@@ -76,6 +76,16 @@ describe 'radio input' do
 
         output_buffer.should have_tag("form li fieldset ol li label input[@checked='checked']")
       end
+      
+      it "should not contain invalid HTML attributes" do
+        
+        semantic_form_for(@new_post) do |builder|
+          concat(builder.input(:author, :as => :radio))
+        end
+        
+        output_buffer.should_not have_tag("form li fieldset ol li input[@find_options]")
+      end
+      
     end
 
     describe 'and no object is given' do
@@ -151,5 +161,39 @@ describe 'radio input' do
     end
 
   end
+  
+  describe "with i18n of the legend label" do
+    
+    before do
+      ::I18n.backend.store_translations :en, :formtastic => { :labels => { :post => { :authors => "Translated!" }}}
 
+      @new_post.stub!(:author_ids).and_return(nil)
+      semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:authors, :as => :radio))
+      end
+    end
+    
+    after do
+      ::I18n.backend.reload!
+    end
+    
+    it "should do foo" do
+      output_buffer.should have_tag("legend.label label", /Translated/)
+    end
+    
+  end
+
+  describe "when :label option is set" do
+    before do
+      @new_post.stub!(:author_ids).and_return(nil)
+      @form = semantic_form_for(@new_post) do |builder|
+        concat(builder.input(:authors, :as => :radio, :label => 'The authors'))
+      end
+    end
+
+    it "should output the correct label title" do
+      output_buffer.concat(@form) if Formtastic::Util.rails3?
+      output_buffer.should have_tag("legend.label label", /The authors/)
+    end
+  end
 end
