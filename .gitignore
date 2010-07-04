@@ -3,4 +3,5 @@ coverage
 pkg
 *~
 *watchr.rb
+log/*
 nbproject/

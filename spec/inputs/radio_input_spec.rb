@@ -111,6 +111,16 @@ describe 'radio input' do
         end
       end
 
+      it 'should html escape the label string' do
+        output_buffer.replace ''
+        semantic_form_for(:project, :url => 'http://test.host') do |builder|
+          concat(builder.input(:author_id, :as => :radio, :collection => [["<b>Item 1</b>", 1], ["<b>Item 2</b>", 2]]))
+        end
+        output_buffer.should have_tag('form li fieldset ol li label') do |label|
+          label.body.should match /&lt;b&gt;Item [12]&lt;\/b&gt;$/
+        end
+      end
+
       it 'should generate inputs for each item' do
         ::Author.find(:all).each do |author|
           output_buffer.should have_tag("form li fieldset ol li label input#project_author_id_#{author.id}")
@@ -167,6 +177,7 @@ describe 'radio input' do
     before do
       ::I18n.backend.store_translations :en, :formtastic => { :labels => { :post => { :authors => "Translated!" }}}
 
+      Formtastic::SemanticFormBuilder.i18n_lookups_by_default = true
       @new_post.stub!(:author_ids).and_return(nil)
       semantic_form_for(@new_post) do |builder|
         concat(builder.input(:authors, :as => :radio))
@@ -175,6 +186,7 @@ describe 'radio input' do
     
     after do
       ::I18n.backend.reload!
+      Formtastic::SemanticFormBuilder.i18n_lookups_by_default = false
     end
     
     it "should do foo" do
@@ -192,7 +204,6 @@ describe 'radio input' do
     end
 
     it "should output the correct label title" do
-      output_buffer.concat(@form) if Formtastic::Util.rails3?
       output_buffer.should have_tag("legend.label label", /The authors/)
     end
   end
